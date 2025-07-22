@@ -8,6 +8,21 @@ import { downGet, rightGet } from "./keys.js";
 import { hash, removeCopyingSelection, updateSelectionFromCoords } from "./selection.js";
 import { getColumnNameFromId } from "./internalHelpers.js";
 
+function parseHTMLTable(html) {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const table = doc.querySelector('table');
+    if (!table) return null;
+
+    const data = [];
+    for (let row of table.rows) {
+        const rowData = [];
+        for (let cell of row.cells) {
+            rowData.push(cell.textContent);
+        }
+        data.push(rowData);
+    }
+    return data;
+}
 /**
  * Copy method
  *
@@ -241,7 +256,16 @@ export const paste = function(x, y, data) {
     }
 
     // Split new line
-    data = parseCSV(data, "\t");
+    let parsedHTML = null;
+    if (typeof window !== 'undefined' && window._clipboardHTML) {
+        parsedHTML = parseHTMLTable(window._clipboardHTML);
+    }
+
+    if (parsedHTML) {
+        data = parsedHTML;
+    } else {
+        data = parseCSV(data, "\t");
+    }
 
     const ex = obj.selectedCell[2];
     const ey = obj.selectedCell[3];
