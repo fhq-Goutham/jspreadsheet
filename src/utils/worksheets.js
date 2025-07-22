@@ -19,7 +19,7 @@ import { createNestedHeader, executeFormula, getCell, getCellFromCoords, getLabe
 import { getComments, setComments } from './comments.js';
 import { orderBy } from './orderBy.js';
 import { getWorksheetConfig, setConfig } from './config.js';
-import { getMeta, setMeta } from './meta.js';
+import { getMeta, setMeta, updateMeta } from './meta.js';
 import { closeEditor, openEditor } from './editor.js';
 import dispatch from './dispatch.js';
 import { getIdFromColumnName } from './internalHelpers.js';
@@ -639,6 +639,7 @@ const worksheetPublicMethods = [
         return getMeta.call(this, cell);
     }],
     ['setMeta', setMeta],
+    ['updateMeta', updateMeta],
     ['showColumn', showColumn],
     ['hideColumn', hideColumn],
     ['showIndex', showIndex],
